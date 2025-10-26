@@ -17,6 +17,9 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.CollapsibleObject
     public Record record = new Record();
 
+    @ConfigEntry.Gui.CollapsibleObject
+    public Message message = new Message();
+
     public static class General {
         @ConfigEntry.Gui.Tooltip
         public boolean replaceEscapeChar = true;
@@ -66,5 +69,19 @@ public class ModConfig implements ConfigData {
 
         @ConfigEntry.Gui.Tooltip
         public String separator = "\\n";
+    }
+
+    public static class Message {
+        @ConfigEntry.Gui.Tooltip
+        public boolean basic = true;
+
+        @ConfigEntry.Gui.Tooltip
+        public boolean advanced = false;
+
+        @ConfigEntry.Gui.Tooltip
+        public boolean logBasic = false;
+
+        @ConfigEntry.Gui.Tooltip
+        public boolean logAdvanced = false;
     }
 }

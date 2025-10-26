@@ -34,6 +34,7 @@ public class LocationClipboardClient implements ClientModInitializer {
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			while (copyKey.wasPressed()) {
 				ClientPlayerEntity player = client.player;
+				if (player == null) continue;
 				ClipboardActionUtil actionUtil = new ClipboardActionUtil(player);
 				actionUtil.copy();
 			}
@@ -41,6 +42,7 @@ public class LocationClipboardClient implements ClientModInitializer {
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			while (recordKey.wasPressed()) {
 				ClientPlayerEntity player = client.player;
+				if (player == null) continue;
 				ModConfig config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
 				if (!config.record.enable) continue;
 				if (recordActionUtil != null) {

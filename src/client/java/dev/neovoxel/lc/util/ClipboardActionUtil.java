@@ -6,14 +6,20 @@ import dev.neovoxel.lc.type.PositionType;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static dev.neovoxel.lc.LocationClipboard.MOD_ID;
 
 public class ClipboardActionUtil {
     private final ClientPlayerEntity player;
     private final MinecraftClient client = MinecraftClient.getInstance();
     private final ModConfig config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
+    private static final Logger logger = LoggerFactory.getLogger(MOD_ID);
 
     public ClipboardActionUtil(ClientPlayerEntity player) {
         this.player = player;
@@ -37,18 +43,25 @@ public class ClipboardActionUtil {
             LocationClipboardClient.recordActionUtil.record(true);
             return;
         }
+        String content = null;
         if (config.general.positionType == PositionType.PLAYER) {
-            String content = copyPlayerLocation();
-            client.keyboard.setClipboard(content);
+            content = copyPlayerLocation();
         } else if (config.general.positionType == PositionType.UNDERFOOT_BLOCK) {
-            String content = copyUnderfootBlock();
-            client.keyboard.setClipboard(content);
+            content = copyUnderfootBlock();
         } else if (config.general.positionType == PositionType.TARGETED_BLOCK) {
-            String content = copyTargetedBlock(true);
-            client.keyboard.setClipboard(content);
+            content = copyTargetedBlock(true);
         } else if (config.general.positionType == PositionType.TARGETED_BLOCK_WITHOUT_FLUID) {
-            String content = copyTargetedBlock(false);
+            content = copyTargetedBlock(false);
+        }
+        if (content != null) {
             client.keyboard.setClipboard(content);
+            if (config.message.logBasic) {
+                logger.info("Player copy the position content: {}", content);
+            }
+            if (config.message.basic) {
+                client.player.sendMessage(Text.of(Text.translatable("text.location-clipboard.message.copy")
+                        .getString().replace("${content}", content)));
+            }
         }
     }
 
