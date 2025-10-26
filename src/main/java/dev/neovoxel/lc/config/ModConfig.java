@@ -7,22 +7,26 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
 @Config(name = "location-clipboard")
 public class ModConfig implements ConfigData {
+    @ConfigEntry.Gui.PrefixText
     @ConfigEntry.Gui.CollapsibleObject
     public General general = new General();
 
     @ConfigEntry.Gui.CollapsibleObject
     public Data data = new Data();
 
+    @ConfigEntry.Gui.CollapsibleObject
+    public Record record = new Record();
+
     public static class General {
-        @ConfigEntry.Gui.PrefixText
+        @ConfigEntry.Gui.Tooltip
+        public boolean replaceEscapeChar = true;
+
         @ConfigEntry.Gui.Tooltip
         public String format = "/tp ${player} ${x} ${y} ${z}";
 
         @ConfigEntry.Gui.Tooltip
         public PositionType positionType = PositionType.PLAYER;
 
-
-        @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
         public int targetedMaxDistance = 20;
     }
 
@@ -42,5 +46,25 @@ public class ModConfig implements ConfigData {
 
         @ConfigEntry.BoundedDiscrete(min = 0, max = 14)
         public int yawPrecision = 14;
+    }
+
+    public static class Record {
+        @ConfigEntry.Gui.PrefixText
+        public boolean enable = true;
+
+        @ConfigEntry.Gui.Tooltip
+        public boolean copyWithRecord = false;
+
+        @ConfigEntry.Gui.Tooltip
+        public boolean autoRecord = false;
+
+        @ConfigEntry.Gui.Tooltip
+        public boolean autoRecordAndSelfRecord = true;
+
+        @ConfigEntry.Gui.Tooltip
+        public int autoRecordPeriod = 1;
+
+        @ConfigEntry.Gui.Tooltip
+        public String separator = "\\n";
     }
 }

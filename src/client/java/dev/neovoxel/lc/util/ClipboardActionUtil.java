@@ -1,13 +1,14 @@
 package dev.neovoxel.lc.util;
 
+import dev.neovoxel.lc.LocationClipboardClient;
 import dev.neovoxel.lc.config.ModConfig;
 import dev.neovoxel.lc.type.PositionType;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 public class ClipboardActionUtil {
     private final ClientPlayerEntity player;
@@ -17,20 +18,41 @@ public class ClipboardActionUtil {
     public ClipboardActionUtil(ClientPlayerEntity player) {
         this.player = player;
     }
+    
+    public String copyContent() {
+        if (config.general.positionType == PositionType.PLAYER) {
+            return copyPlayerLocation();
+        } else if (config.general.positionType == PositionType.UNDERFOOT_BLOCK) {
+            return copyUnderfootBlock();
+        } else if (config.general.positionType == PositionType.TARGETED_BLOCK) {
+            return copyTargetedBlock(true);
+        } else if (config.general.positionType == PositionType.TARGETED_BLOCK_WITHOUT_FLUID) {
+            return copyTargetedBlock(false);
+        }
+        return null;
+    }
 
     public void copy() {
+        if (LocationClipboardClient.recordActionUtil != null) {
+            LocationClipboardClient.recordActionUtil.record(true);
+            return;
+        }
         if (config.general.positionType == PositionType.PLAYER) {
-            copyPlayerLocation();
+            String content = copyPlayerLocation();
+            client.keyboard.setClipboard(content);
         } else if (config.general.positionType == PositionType.UNDERFOOT_BLOCK) {
-            copyUnderfootBlock();
+            String content = copyUnderfootBlock();
+            client.keyboard.setClipboard(content);
         } else if (config.general.positionType == PositionType.TARGETED_BLOCK) {
-            copyTargetedBlock(true);
+            String content = copyTargetedBlock(true);
+            client.keyboard.setClipboard(content);
         } else if (config.general.positionType == PositionType.TARGETED_BLOCK_WITHOUT_FLUID) {
-            copyTargetedBlock(false);
+            String content = copyTargetedBlock(false);
+            client.keyboard.setClipboard(content);
         }
     }
 
-    public void copyPlayerLocation() {
+    public String copyPlayerLocation() {
         String name = player.getName().getString();
         double x = player.getX();
         double y = player.getY();
@@ -44,10 +66,13 @@ public class ClipboardActionUtil {
                 .replace("${z}", String.format("%." + config.data.zPrecision + "f", z))
                 .replace("${pitch}", String.format("%." + config.data.pitchPrecision + "f", pitch))
                 .replace("${yaw}", String.format("%." + config.data.yawPrecision + "f", yaw));
-        client.keyboard.setClipboard(content);
+        if (config.general.replaceEscapeChar) {
+            content = StringEscapeUtils.unescapeJava(content);
+        }
+        return content;
     }
 
-    public void copyUnderfootBlock() {
+    public String copyUnderfootBlock() {
         BlockPos pos = player.getBlockPos();
         int x = pos.getX();
         int y = pos.getY() - 1;
@@ -57,10 +82,13 @@ public class ClipboardActionUtil {
                 .replace("${x}", String.valueOf(x))
                 .replace("${y}", String.valueOf(y))
                 .replace("${z}", String.valueOf(z));
-        client.keyboard.setClipboard(content);
+        if (config.general.replaceEscapeChar) {
+            content = StringEscapeUtils.unescapeJava(content);
+        }
+        return content;
     }
 
-    public void copyTargetedBlock(boolean withFluid) {
+    public String copyTargetedBlock(boolean withFluid) {
         Vec3d pos = player.raycast(config.general.targetedMaxDistance, 0.0F, withFluid).getPos();
         double x = pos.getX();
         double y = pos.getY();
@@ -70,6 +98,9 @@ public class ClipboardActionUtil {
                 .replace("${x}", String.format("%." + config.data.xPrecision + "f", x))
                 .replace("${y}", String.format("%." + config.data.yPrecision + "f", y))
                 .replace("${z}", String.format("%." + config.data.zPrecision + "f", z));
-        client.keyboard.setClipboard(content);
+        if (config.general.replaceEscapeChar) {
+            content = StringEscapeUtils.unescapeJava(content);
+        }
+        return content;
     }
 }

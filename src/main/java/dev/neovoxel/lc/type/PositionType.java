@@ -1,7 +1,5 @@
 package dev.neovoxel.lc.type;
 
-import net.minecraft.text.Text;
-
 public enum PositionType {
     OFF("text.location-clipboard.position-type.off"),
     PLAYER("text.location-clipboard.position-type.player"),
@@ -11,7 +9,7 @@ public enum PositionType {
 
     private final String key;
 
-    private PositionType(String key) {
+    PositionType(String key) {
         this.key = key;
     }
 }
