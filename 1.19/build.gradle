@@ -1,0 +1,11 @@
+loom {
+    splitEnvironmentSourceSets()
+
+    mods {
+        "locationclipboard" {
+            sourceSet sourceSets.main
+            sourceSet sourceSets.client
+        }
+    }
+
+}

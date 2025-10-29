@@ -1,0 +1,39 @@
+{
+	"schemaVersion": 1,
+	"id": "location-clipboard",
+	"version": "${version}",
+	"name": "LocationClipboard",
+	"description": "A mod used to copy location customizable",
+	"authors": [
+		"Aurelian2842"
+	],
+	"contact": {
+		"homepage": "https://github.com/NeoVoxelDev/LocationClipboard",
+		"sources": "https://github.com/NeoVoxelDev/LocationClipboard"
+	},
+	"license": "LGPL-3.0",
+	"icon": "assets/locationclipboard/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"main": [
+			"dev.neovoxel.lc.LocationClipboard"
+		],
+		"client": [
+			"dev.neovoxel.lc.LocationClipboardClient"
+		],
+		"modmenu": [
+			"dev.neovoxel.lc.integration.ModMenuIntegration"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.14.7",
+		"minecraft": ">=1.21.2",
+		"java": ">=17",
+		"fabric-api": "*",
+		"cloth-config": ">=4.9",
+		"modmenu": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
